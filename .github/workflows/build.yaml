@@ -40,9 +40,6 @@ jobs:
             "$HOME"
             "$RUNNER_TEMP"
             "$GITHUB_WORKSPACE"
-            "$HOME/.config"
-            "$HOME/.gitconfig"
-            "$HOME/.config"
           )
       
           for target in "${TARGETS[@]}"; do
